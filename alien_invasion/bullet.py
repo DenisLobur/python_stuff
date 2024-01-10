@@ -2,7 +2,7 @@ import pygame
 
 from pygame.sprite import Sprite
 
-# check
+# check 2
 class Bullet(Sprite):
     """A class to manage a bullets fired from ship"""
 
