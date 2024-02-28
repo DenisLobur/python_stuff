@@ -1,8 +1,9 @@
+from datetime import datetime
 from pathlib import Path
 import csv
 import matplotlib.pyplot as plt
 
-path = Path('weather_data/sitka_weather_07-2021_simple.csv')
+path = Path('weather_data/sitka_weather_2021_simple.csv')
 lines = path.read_text(encoding='utf-8').splitlines()
 
 reader = csv.reader(lines)
@@ -11,10 +12,14 @@ header_row = next(reader)
 for index, column_header in enumerate(header_row):
     print(index, column_header)
 
-# Extract high temperatures
-highs = []
+# Extract dates, low and high temperatures
+dates, lows, highs = [], [], []
 for row in reader:
+    current_date = datetime.strptime(row[2], '%Y-%m-%d')
     hight = int(row[4])
+    low = int(row[5])
+    dates.append(current_date)
+    lows.append(low)
     highs.append(hight)
 
 print(highs)
@@ -22,10 +27,12 @@ print(highs)
 # Plot the high temperatures.
 plt.style.use('seaborn-v0_8')
 fig, ax = plt.subplots()
-ax.plot(highs, color='red')
+ax.plot(dates, highs, color='red', alpha=0.5)
+ax.plot(dates, lows, color='blue', alpha=0.5)
+ax.fill_between(dates, highs, lows, facecolor='blue', alpha=0.1)
 
 # Format plot.
-ax.set_title("Daily High Temperatures, July 2021", fontsize=24)
+ax.set_title("Daily High and Low Temperatures, 2021", fontsize=24)
 ax.set_xlabel('', fontsize=16)
 ax.set_ylabel("Temperature (F)", fontsize=16)
 ax.tick_params(labelsize=16)
